@@ -8,7 +8,11 @@ class Todo extends BaseController{
         $this->db = \Config\Database::connect();
     }
     public function index(){
-        return view('todo_list');
+        $tbl = $this->db->table('todos');
+
+        $todos = $tbl->get()->getResult();
+
+        return view('todo_list',array( $todos));
     }
 
     public function simple($p1=null){
@@ -37,5 +41,12 @@ class Todo extends BaseController{
         echo "<pre>";
         var_dump($res);
         echo "</pre>";
+    }
+    public function getData()
+    {
+        $tbl = $this->db->table('todos');
+        $data = $tbl->get()->getResult('array');
+        echo "<pre>";
+        var_dump($data);
     }
 }
