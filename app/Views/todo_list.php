@@ -4,6 +4,7 @@
 
 
 <div class="container">
+    <h2><?-$title?></h2>
     <ul class="list-group">
         <?php //var_dump($todos)?>
         <?php foreach($todos as $t){ ?>
