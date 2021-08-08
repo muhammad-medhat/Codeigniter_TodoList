@@ -8,6 +8,7 @@ class Todos extends BaseController{
     {
         $this->db = \Config\Database::connect();
         $this->todos_model = new TodoModel();
+        $this->perpage=10;
     }
     public function index(){
         return  $this->show_todos();
@@ -76,12 +77,8 @@ class Todos extends BaseController{
     }
 
     function get_todos(){
-        $todos_model = new TodoModel();
-        $todos = $todos_model->asObject()->findAll();
-        return $todos;
-
-        echo "<pre>";
-        var_dump($todos);
+        // $todos_model = new TodoModel();
+        return $this->todos_model->asObject()->paginate($this->perpage);        
     }
 
 
@@ -89,7 +86,13 @@ class Todos extends BaseController{
     function show_todos(){
         $title = 'Todos list';
         $todos=$this->get_todos();
-        return view('todo_list', array('title'=>$title, 'todos'=>$todos));
+        return view('todo_list', 
+            array(
+                'title'=>$title, 
+                'todos'=>$todos, 
+                'pager'=>$this->todos_model->pager
+            )
+        );
     }
 
 

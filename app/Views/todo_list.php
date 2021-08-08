@@ -22,8 +22,11 @@
             </li>
         <?php } ?>
     </ul>
+
 </div>
 
-
+<div class="pagination">
+        <?php echo $pager->links()?>
+    </div>
 
 <?= $this->endSection()?>
