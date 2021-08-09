@@ -8,7 +8,7 @@ class Todos extends BaseController{
     {
         $this->db = \Config\Database::connect();
         $this->todos_model = new TodoModel();
-        $this->perpage=10;
+        $this->perpage=2;
     }
     public function index(){
         return  $this->show_todos();
@@ -34,14 +34,26 @@ class Todos extends BaseController{
                     'name'=>$this->request->getVar('name'), 
                     'description'=>$this->request->getVar('description'), 
                     'done'=> $this->request->getVar('done')  //==false )? 0: 1
-                );                
+                );     
+                $session = session();              
                 //$this->dump_obj($data);
-                $this->todos_model->insert($data);
-                $session = session();
+                if($this->todos_model->insert($data)){
+                    $alert = (object)array(
+                        'class' =>'alert-success',
+                        'message'=> 'Task Added Successfully'
+                    );
+                }else{
+                    $alert = (object)array(
+                        'class' =>'alert-danger',
+                        'message'=> 'Cant Add Task'
+                    );
+                }
+             
                 // $this->dump_obj($session);
+                
                 dump_obj($data);
 
-                return $this->show_todos();
+                return $this->show_todos($alert);
 
             default:
                 $title = 'Insert a task';
@@ -83,13 +95,14 @@ class Todos extends BaseController{
 
 
 
-    function show_todos(){
+    function show_todos($alert=''){
         $title = 'Todos list';
         $todos=$this->get_todos();
         return view('todo_list', 
             array(
                 'title'=>$title, 
                 'todos'=>$todos, 
+                'alert'=>$alert,
                 'pager'=>$this->todos_model->pager
             )
         );
