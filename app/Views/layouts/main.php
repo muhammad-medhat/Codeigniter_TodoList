@@ -16,6 +16,7 @@
     <header>
         <?= $this->include('layouts/inc/header')?>
     </header>
+    <h2>Method: <?= isset($method)? $method: 'XXX'?></h2>
     <div class="cont">
         <?= $this->renderSection('body-content')?>
     </div>

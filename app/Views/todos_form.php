@@ -1,18 +1,19 @@
 <?= $this->extend('layouts/main.php')?>
 
 <?= $this->section('body-content')?>
-
+<?php if(isset($task)){}?>
     <div class="container">
         <h2><?=$title?></h2>
 
-            <?= form_open('todos/insert')?>
+            <?= form_open($action)?>
             <div class="form-group">
                 <label for="exampleInputName">Task Name</label>
                 <?= form_input(array(
                     'type'=>"text", 
                     'class'=>"form-control", 
                     'id'=>"exampleInputName", 
-                    'name'=>'name'
+                    'name'=>'name', 
+                    'value'=>isset($task)?$task->name: ''
                 ))?>
             </div>
             <div class="form-group">
@@ -20,7 +21,9 @@
                 <?= form_textarea(array(
                     'class'=>"form-control", 
                     'id'=>"exampleInputDesc", 
-                    'name'=>'description'
+                    'name'=>'description', 
+                    'value'=>isset($task)?$task->description: ''
+
                 ))?>
             </div>
 
@@ -28,7 +31,9 @@
                 <?= form_checkbox(array(
                     'class'=>"form-check-input", 
                     'id'=>"exampleInputDone", 
-                    'name'=>'done'
+                    'name'=>'done',
+                    'checked'=>isset($task)?$task->done: 0
+
                 ))?>
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Done</label>

@@ -3,7 +3,7 @@
 <nav aria-label="Page navigation">
     <ul class="pagination">
     <?php if ($pager->hasPrevious()) : ?>
-        <li>
+        <li class="page-item">
             <a href="<?= $pager->getFirst() ?>" aria-label="<?= lang('Pager.first') ?>">
                 <span aria-hidden="true"><?= lang('Pager.first') ?></span>
             </a>

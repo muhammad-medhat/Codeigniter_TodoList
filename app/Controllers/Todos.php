@@ -8,21 +8,60 @@ class Todos extends BaseController{
     {
         $this->db = \Config\Database::connect();
         $this->todos_model = new TodoModel();
-        $this->perpage=2;
+        $this->perpage=10;
     }
     public function index(){
+        
         return  $this->show_todos();
-
-        // $tbl = $this->db->table('todos');
-
-        // $todos = $this->get_todos();        
-        // //$todos = $tbl->get()->getResult();
-
-        // //$this->dump_obj($todos);
-
-        // return view('todo_list',array( 'todos'=>$todos));
     }
 
+    public function update($id){
+
+        $mtd  = $this->request->getMethod();               
+        $task = $this->todos_model->asObject()->find($id);
+        //dump_obj($task);
+        echo $mtd;
+        switch($mtd){
+            case 'post': 
+
+                //DB Update
+                $data=[
+                    'name'=>$this->request->getVar('name'), 
+                    'description'=>$this->request->getVar('description'), 
+                    'done'=> (null !== $this->request->getVar('done'))? 1: 0 
+                ];     
+                $session = session();  
+                $session->setFlashdata('method', $mtd);
+                dump_obj($data, "Update data");
+                // dump_obj($this->todos_model);
+                // dump_obj($session);
+                if($this->todos_model->update($data)){
+                    $alert = (object)array(
+                        'class' =>'alert-success',
+                        'message'=> 'Task Updated Successfully'
+                    );
+                } else {
+                    $alert = (object)array(
+                        'class' =>'alert-danger',
+                        'message'=> 'Cant Update Task'
+                    );
+                }
+                // dump_obj($data);
+
+                return $this->show_todos($alert);
+
+            default:
+                $title = 'Update a task';
+                return view('todos_form', 
+                array(
+                    'title'=>$title, 
+                    'task'=>$task, 
+                    'method'=> $mtd, 
+                    'action'=>"todos/update/$id")
+                );
+
+    }
+}
     public function insert(){
         //$this->dump_obj($this->request);
         $mtd  = $this->request->getMethod();
@@ -42,51 +81,47 @@ class Todos extends BaseController{
                         'class' =>'alert-success',
                         'message'=> 'Task Added Successfully'
                     );
-                }else{
+                } else {
                     $alert = (object)array(
                         'class' =>'alert-danger',
                         'message'=> 'Cant Add Task'
                     );
                 }
-             
-                // $this->dump_obj($session);
-                
-                dump_obj($data);
+                // dump_obj($data);
 
                 return $this->show_todos($alert);
 
             default:
                 $title = 'Insert a task';
-                return view('todos_form', array('title'=>$title));
+                return view('todos_form', 
+                    array(
+                        'title'=>$title, 
+                        'method'=> $mtd, 
+                        'action'=>'todos/insert'
+
+            ));
         }
 
 
     }
-    public function insert_task(){
-        $q = "INSERT INTO `todos` (`id`, `name`, `description`) VALUES (NULL, 'Web Development', 'Html, Css, Js')";
-        if($this->db->query($q)){
-            echo "<h2>Successfuly Executed";
-        } else{
-            echo "Error";
-        }
-    }
 
-    public function get_data(){
-        // $q = "select * from todos";
-        $q = "select * from todos where id=2";
-        // $res = $this->db->query($q)->getResult());
-        $res = $this->db->query($q)->getRow();
-        echo "<pre>";
-        var_dump($res);
-        echo "</pre>";
-    }
-    public function getData()
-    {
-        $tbl = $this->db->table('todos');
-        $data = $tbl->get()->getResult('array');
-        echo "<pre>";
-        var_dump($data);
-    }
+
+    // public function get_data(){
+    //     // $q = "select * from todos";
+    //     $q = "select * from todos where id=2";
+    //     // $res = $this->db->query($q)->getResult());
+    //     $res = $this->db->query($q)->getRow();
+    //     echo "<pre>";
+    //     var_dump($res);
+    //     echo "</pre>";
+    // }
+    // public function getData()
+    // {
+    //     $tbl = $this->db->table('todos');
+    //     $data = $tbl->get()->getResult('array');
+    //     echo "<pre>";
+    //     var_dump($data);
+    // }
 
     function get_todos(){
         // $todos_model = new TodoModel();
@@ -96,10 +131,14 @@ class Todos extends BaseController{
 
 
     function show_todos($alert=''){
+        $mtd  = $this->request->getMethod();               
+
+
         $title = 'Todos list';
         $todos=$this->get_todos();
         return view('todo_list', 
             array(
+                'method'=>$mtd,
                 'title'=>$title, 
                 'todos'=>$todos, 
                 'alert'=>$alert,
@@ -108,12 +147,4 @@ class Todos extends BaseController{
         );
     }
 
-
-
-
-    // function dump_obj($obj){
-    //     echo "<pre>";
-    //     var_dump($obj);
-    //     echo "</pre>";
-    // }
 }
