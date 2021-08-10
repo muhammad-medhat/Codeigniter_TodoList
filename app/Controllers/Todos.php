@@ -15,6 +15,19 @@ class Todos extends BaseController{
         return  $this->show_todos();
     }
 
+    public function delete($id){
+        $mtd  = $this->request->getMethod();
+        $task = $this->todos_model->asObject()->find($id);
+        if($this->todos_model->delete($id)){
+            $session = session();  
+            $session->setFlashdata('method', $mtd);
+            $session->setFlashdata('Success', "Item withh id ($id) has been deleted");
+            return redirect()->to(site_url('todos/index'));
+        }
+
+
+    }
+
     public function update($id){
 
         $mtd  = $this->request->getMethod();               
