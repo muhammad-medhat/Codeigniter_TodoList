@@ -31,17 +31,9 @@
 
 </div>
 
-<div class="pagination">
+<div class="text-center m-t-1">
         <?= $pager->links()?>
-    </div>
-    <!-- <div class="g1">
-        <h4>group1</h4>
-            <?php //= $pager->links('group1') ?>
-    </div>
-    <div class="g2">
-        <h4>group2</h4>
-    <?php //= $pager->simpleLinks('group2') ?>
-    </div> -->
+</div>
 
 
 

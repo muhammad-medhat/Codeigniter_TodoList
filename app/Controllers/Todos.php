@@ -18,22 +18,24 @@ class Todos extends BaseController{
     public function delete($id){
         $mtd  = $this->request->getMethod();
         $task = $this->todos_model->asObject()->find($id);
+
+        // echo $this->db->getLastQuery();
         if($this->todos_model->delete($id)){
             $session = session();  
             $session->setFlashdata('method', $mtd);
-            $session->setFlashdata('Success', "Item withh id ($id) has been deleted");
+            $session->setFlashdata('success', "Item withh id ($id) has been deleted");
             return redirect()->to(site_url('todos/index'));
+        } else {
+            session()->setFlashdata('error', 'Cant delete');
         }
-
-
     }
 
     public function update($id){
 
         $mtd  = $this->request->getMethod();               
         $task = $this->todos_model->asObject()->find($id);
-        //dump_obj($task);
-        echo $mtd;
+        //dump_obj($task, 'Task to update');
+        //echo $mtd;
         switch($mtd){
             case 'post': 
 
@@ -45,10 +47,13 @@ class Todos extends BaseController{
                 ];     
                 $session = session();  
                 $session->setFlashdata('method', $mtd);
-                dump_obj($data, "Update data");
-                // dump_obj($this->todos_model);
-                // dump_obj($session);
-                if($this->todos_model->update($data)){
+                // // dump_obj($this->todos_model);
+                // // dump_obj($session);
+                // echo $this->db->getLastQuery();
+                if($this->todos_model->where(['id'=>$id])->set($data)->update()){
+                    dump_obj($data, "Update data");
+                    dump_obj($_POST, 'post data');
+
                     $alert = (object)array(
                         'class' =>'alert-success',
                         'message'=> 'Task Updated Successfully'
@@ -118,23 +123,6 @@ class Todos extends BaseController{
 
     }
 
-
-    // public function get_data(){
-    //     // $q = "select * from todos";
-    //     $q = "select * from todos where id=2";
-    //     // $res = $this->db->query($q)->getResult());
-    //     $res = $this->db->query($q)->getRow();
-    //     echo "<pre>";
-    //     var_dump($res);
-    //     echo "</pre>";
-    // }
-    // public function getData()
-    // {
-    //     $tbl = $this->db->table('todos');
-    //     $data = $tbl->get()->getResult('array');
-    //     echo "<pre>";
-    //     var_dump($data);
-    // }
 
     function get_todos(){
         // $todos_model = new TodoModel();
