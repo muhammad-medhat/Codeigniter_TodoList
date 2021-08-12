@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-class Home extends BaseController
+class REST extends BaseController
 {
 	public function index()
 	{
-		return view('welcome_message');
+		return view('rest');
 	}
 	public function hello(){
 		return view('hello');

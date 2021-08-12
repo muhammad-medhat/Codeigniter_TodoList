@@ -120,12 +120,9 @@ class Todos extends BaseController{
             ));
         }
 
-
     }
 
-
     function get_todos(){
-        // $todos_model = new TodoModel();
         return $this->todos_model->asObject()->paginate($this->perpage);        
     }
 
