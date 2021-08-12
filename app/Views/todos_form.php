@@ -1,7 +1,10 @@
 <?= $this->extend('layouts/main.php')?>
 
 <?= $this->section('body-content')?>
-<?php if(isset($task)){}?>
+<?php if(isset($task)){
+    $done = $task->done;
+}?>
+<?php dump_obj($task)?>
     <div class="container">
         <h2><?=$title?></h2>
 
@@ -11,7 +14,7 @@
                 <?= form_input(array(
                     'type'=>"text", 
                     'class'=>"form-control", 
-                    'id'=>"exampleInputName", 
+                    'id'=>"inpName", 
                     'name'=>'name', 
                     'value'=>isset($task)?$task->name: ''
                 ))?>
@@ -20,26 +23,30 @@
                 <label for="exampleInputDesc">Description</label>
                 <?= form_textarea(array(
                     'class'=>"form-control", 
-                    'id'=>"exampleInputDesc", 
+                    'id'=>"inpDesc", 
                     'name'=>'description', 
                     'value'=>isset($task)?$task->description: ''
-
                 ))?>
             </div>
 
             <div class="form-check">
                 <?= form_checkbox(array(
                     'class'=>"form-check-input", 
-                    'id'=>"exampleInputDone", 
+                    'id'=>"inpDone", 
                     'name'=>'done',
-                    'checked'=>isset($task)?$task->done: 0
-
+                    'checked'=>isset($done)?$done: 0
                 ))?>
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Done</label>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-        <?= form_close()?>        
+        <?= form_close()?>      
     </div>
+    <script>
+        const chk = document.getElementById('inpDone')
+        chk.addEventListener('change', ()=>{
+            // console.log(chk)
+            chk.value = (chk.checked)?1: 0
+        })
+    </script>
 
 <?= $this->endSection()?>

@@ -38,21 +38,21 @@ class Todos extends BaseController{
         //echo $mtd;
         switch($mtd){
             case 'post': 
-
-                //DB Update
-                $data=[
+                // $data_update = $this->request->getPost();
+                $data_update = [
                     'name'=>$this->request->getVar('name'), 
                     'description'=>$this->request->getVar('description'), 
-                    'done'=> (null !== $this->request->getVar('done'))? 1: 0 
-                ];     
+                    'done'=> (null !== $this->request->getVar('done'))?1: 0                    
+                ];
+
+                // dump_obj($data_update, 'update');
+
+                //DB Update   
                 $session = session();  
                 $session->setFlashdata('method', $mtd);
-                // // dump_obj($this->todos_model);
-                // // dump_obj($session);
-                // echo $this->db->getLastQuery();
-                if($this->todos_model->where(['id'=>$id])->set($data)->update()){
-                    dump_obj($data, "Update data");
-                    dump_obj($_POST, 'post data');
+                if($this->todos_model->where(['id'=>$id])->set($data_update)->update()){
+
+                    echo $this->db->getLastQuery();
 
                     $alert = (object)array(
                         'class' =>'alert-success',
