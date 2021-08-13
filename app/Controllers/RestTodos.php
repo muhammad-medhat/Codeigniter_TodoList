@@ -25,7 +25,7 @@ class RestTodos extends ResourceController
 	 */
 	public function index()
 	{
-		$ret = $this->todos_model->findAll();    
+		$ret = $this->todos_model->orderBy('id', 'desc')->findAll();    
 		$n = count($ret)    ;
 		$response = [
             'status' => 200,
@@ -34,6 +34,7 @@ class RestTodos extends ResourceController
             "data" => $ret,
         ];
         return $this->respond($response); 
+        // return $this->setResponseFormat('xml')->respond($response); 
 
 	}
 
@@ -82,7 +83,6 @@ class RestTodos extends ResourceController
             'messages' => "todo Saved",
 			'data'=> $data
         ];
-      
         return $this->respondCreated($response);
 	}
 
@@ -93,7 +93,22 @@ class RestTodos extends ResourceController
 	 */
 	public function edit($id = null)
 	{
-		//
+		$data=array(
+			'name'=>$this->request->getVar('name'), 
+			'description'=>$this->request->getVar('description'), 
+			'done'=> $this->request->getVar('done')  
+		);
+		$this->todos_model->update($id, $data);
+		$update_query = $this->db->getLastQuery();
+		$new = $this->todos_model->find($id);
+		$response = [
+            'status' => 200,
+            'error' => null,
+            'messages' => "Data Updated",
+			'query'=>$update_query, 
+			'updated'=>$new
+        ];
+        return $this->respond($response);
 	}
 
 	/**
@@ -113,6 +128,21 @@ class RestTodos extends ResourceController
 	 */
 	public function delete($id = null)
 	{
-		//
+		$task = $this->todos_model->find($id);
+		$res = [];        
+        if($task){
+			$this->todos_model->delete($id);
+			$res = [
+                'status' => 200,
+                'error' => null,
+                'messages' => "Data Deleted",
+				'query' => $this->db->getLastQuery()->getQuery()
+            ];
+            return $this->respondDeleted($res);
+		} else{
+            return $this->failNotFound('No Data Found with id ' . $id);
+
+		}
+		
 	}
 }
