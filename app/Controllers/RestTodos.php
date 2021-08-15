@@ -23,8 +23,8 @@ class RestTodos extends ResourceController
 	 *
 	 * @return mixed
 	 */
-	public function index()
-	{
+	public function index(){
+
 		$ret = $this->todos_model->orderBy('id', 'desc')->findAll();    
 		$n = count($ret)    ;
 		$response = [
@@ -47,21 +47,16 @@ class RestTodos extends ResourceController
 	{
 		if(isset($id)){
 			$task = $this->todos_model->find($id);
-			return $this->respond($task);
+			if($task){
+				return $this->respond($task);
+			} else{
+				return $this->failNotFound('No Data xxx Found with id ' . $id);
+			}
 		} else {
 			return $this->index();
 		}
 	}
 
-	/**
-	 * Return a new resource object, with default properties
-	 *
-	 * @return mixed
-	 */
-	public function new()
-	{
-		//
-	}
 
 	/**
 	 * Create a new resource object, from "posted" parameters
@@ -75,12 +70,13 @@ class RestTodos extends ResourceController
 			'description'=>$this->request->getVar('description'), 
 			'done'=> $this->request->getVar('done')  
 		);  
-		$this->todos_model->insert($data);
+		$id = $this->todos_model->insert($data);
+		$data['id'] = $id;
 
         $response = [
             'status' => 200,
             'error' => null,
-            'messages' => "todo Saved",
+            'messages' => "todo Saved ccc",
 			'data'=> $data
         ];
         return $this->respondCreated($response);
@@ -111,16 +107,7 @@ class RestTodos extends ResourceController
         return $this->respond($response);
 	}
 
-	/**
-	 * Add or update a model resource, from "posted" properties
-	 *
-	 * @return mixed
-	 */
-	public function update($id = null)
-	{
-		//
-	}
-
+	
 	/**
 	 * Delete the designated resource object from the model
 	 *

@@ -35,6 +35,13 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->get("simple/(:num)", "Todo::simple/$1");
 // $routes->get('/', 'Home::index');
+//Rest routes
+$routes->resource('resttodos');
+// $routes->get('/resttodos', 'RestTodos::index');
+// $routes->get('/resttodos/(:num)', 'RestTodos::show/$1');
+// $routes->put('/resttodos/(:num)', 'RestTodos::edit/$1');
+// $routes->post('/resttodos', 'RestTodos::create');
+// $routes->delete('/resttodos', 'RestTodos::delete');
 
 /*
  * --------------------------------------------------------------------

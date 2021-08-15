@@ -4,7 +4,7 @@
 <?php if(isset($task)){
     $done = $task->done;
 }?>
-<?php dump_obj($task)?>
+<?php //dump_obj($task)?>
     <div class="container">
         <h2><?=$title?></h2>
 
